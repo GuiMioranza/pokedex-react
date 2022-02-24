@@ -11,7 +11,7 @@ import {
 } from './styles';
 
 
-const limit = 16
+const limit = 24
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -58,6 +58,8 @@ export default function Home() {
       setLoading(true)
       const data = await loadPokemons(offset, limit)
 
+        // tenho que carregar todos os pokemons na primeira chamada 
+        //para poder fazer a busca, pois a api nao tem o parametro de busca
       if (countPokemons.current === 0) {
         countPokemons.current = data.count 
         loadPokemons(0, data.count).then((response) => {
@@ -77,39 +79,39 @@ export default function Home() {
     
   return(
     <Layout>
-    <SearchContainer>
-      <input
-        ref={searchInputRef}
-        type="text"
-        onChange={handleSearchChange}
-        placeholder="Digite o nome de um Pokemon..."
-      />
-      <button type="button" onClick={handleSearchClick}>
-        Pesquisar
-      </button>
-      {isSearching && (
-        <button type="button" onClick={handleClearSearch}>
-          Limpar
+      <SearchContainer>
+        <input
+          ref={searchInputRef}
+          type="text"
+          onChange={handleSearchChange}
+          placeholder="Digite o nome de um Pokemon..."
+        />
+        <button type="button" onClick={handleSearchClick}>
+          Pesquisar
         </button>
-      )}
-    </SearchContainer>
-    <ListContainer>
-      {pokemonsList.map((pokemon) => (
-        <Pokemon key={pokemon.url} pokemon={pokemon} />
-      ))}
+        {isSearching && (
+          <button type="button" onClick={handleClearSearch}>
+            Limpar
+          </button>
+        )}
+      </SearchContainer>
+      <ListContainer>
+        {pokemonsList.map((pokemon) => (
+          <Pokemon key={pokemon.url} pokemon={pokemon} />
+        ))}
 
-      {loading ? (
-        <strong>Carregando...</strong>
-      ) : (
-        !isSearching && (
-          <ListFooter>
-            <LoadMoreButton onClick={handleLoadModePokemons}>
-              Carregar mais
-            </LoadMoreButton>
-          </ListFooter>
-        )
-      )}
-    </ListContainer>
-  </Layout>
+        {loading ? (
+          <strong>Carregando...</strong>
+        ) : (
+          !isSearching && (
+            <ListFooter>
+              <LoadMoreButton onClick={handleLoadModePokemons}>
+                Carregar mais
+              </LoadMoreButton>
+            </ListFooter>
+          )
+        )}
+      </ListContainer>
+    </Layout>
   )
 }
